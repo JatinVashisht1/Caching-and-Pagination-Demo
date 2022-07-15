@@ -2,6 +2,8 @@ package com.jatinvashisht.paginationandcachingpractice.di
 
 import com.jatinvashisht.paginationandcachingpractice.core.Constants
 import com.jatinvashisht.paginationandcachingpractice.data.remote.RecipeApi
+import com.jatinvashisht.paginationandcachingpractice.data.remote.repository.RecipeRepositoryImpl
+import com.jatinvashisht.paginationandcachingpractice.domain.repository.RecipeRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,5 +23,6 @@ object AppModule {
         .build()
         .create(RecipeApi::class.java)
 
-
+    @Provides
+    fun providesRecipeRepository(recipeApi: RecipeApi): RecipeRepository = RecipeRepositoryImpl(recipeApi = recipeApi)
 }

@@ -5,6 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface RecipeApi {
-    @GET("/{recipe}")
+    @GET("{recipe}.json")
     suspend fun getRecipeList(@Path("recipe") recipe: String): RecipeDto
 }
