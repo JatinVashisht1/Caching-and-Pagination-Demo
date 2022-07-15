@@ -1,4 +1,4 @@
-package com.jatinvashisht.paginationandcachingpractice
+package com.jatinvashisht.paginationandcachingpractice.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
