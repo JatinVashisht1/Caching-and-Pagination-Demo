@@ -1,7 +1,9 @@
 package com.jatinvashisht.paginationandcachingpractice.domain.repository
 
+import com.jatinvashisht.paginationandcachingpractice.core.Resource
 import com.jatinvashisht.paginationandcachingpractice.data.remote.dto.RecipeDtoItem
+import kotlinx.coroutines.flow.Flow
 
 interface RecipeRepository {
-    suspend fun getRecipes(recipe: String): List<RecipeDtoItem>
+    suspend fun getRecipes(recipe: String, page: Int, pageSize: Int,): Flow<Resource<List<RecipeDtoItem>>>
 }
