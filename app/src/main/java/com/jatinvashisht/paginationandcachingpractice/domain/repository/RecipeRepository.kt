@@ -5,5 +5,5 @@ import com.jatinvashisht.paginationandcachingpractice.data.remote.dto.RecipeDtoI
 import kotlinx.coroutines.flow.Flow
 
 interface RecipeRepository {
-    suspend fun getRecipes(recipe: String, page: Int, pageSize: Int,): Flow<Resource<List<RecipeDtoItem>>>
+    suspend fun getRecipes(recipe: String, page: Int, pageSize: Int,): Resource<List<RecipeDtoItem>>
 }

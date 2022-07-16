@@ -23,29 +23,35 @@ class HomeScreenViewModel @Inject constructor(
         onLoadUpdated = {
             state = state.copy(isLoading = it)
         },
-        onRequest = {nextPage->
+        onRequest = { nextPage ->
             recipeRepository.getRecipes("snacks", state.page, 20)
         },
-        getNextKey = {items->
-            state.page+1
+        getNextKey = { items ->
+            state.page + 1
         },
-        onError = {throwable ->  
-            state = state.copy(error = throwable?.localizedMessage?: "unable to load items, please try again later")
-        },
-        onSuccess = {newItems, newKey->
+        onError = { throwable ->
             state = state.copy(
-                items = state.items + newItems,
-                page = newKey,
-                endReached = newItems.isEmpty(),
+                error = throwable?.localizedMessage
+                    ?: "unable to load items, please try again later"
             )
         }
-    )
+    ) { newItems, newKey ->
+        state = state.copy(
+            items = state.items + newItems,
+            page = newKey,
+            endReached = newItems.isEmpty(),
+        )
+    }
+
     init {
         viewModelScope.launch {
             loadNextItems()
         }
     }
-    suspend fun loadNextItems(){
-        recipePaginator.loadNextItems()
+
+    fun loadNextItems() {
+        viewModelScope.launch {
+            recipePaginator.loadNextItems()
+        }
     }
 }

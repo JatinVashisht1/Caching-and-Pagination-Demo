@@ -35,8 +35,6 @@ fun HomeScreen(
                     .padding(8.dp)
             ) {
                 Text(text = item.title, fontSize = 20.sp)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(item.title)
             }
         }
         item {
