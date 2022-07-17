@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.jatinvashisht.paginationandcachingpractice.ui.theme.PaginationAndCachingPracticeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
