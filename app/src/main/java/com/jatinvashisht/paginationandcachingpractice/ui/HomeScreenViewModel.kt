@@ -24,7 +24,7 @@ class HomeScreenViewModel @Inject constructor(
             state = state.copy(isLoading = it)
         },
         onRequest = { nextPage ->
-            recipeRepository.getRecipes("snacks", state.page, 20)
+            recipeRepository.getRecipes("snacks", state.page, 20, fetchFromRemote = false)
         },
         getNextKey = { items ->
             state.page + 1

@@ -2,24 +2,47 @@ package com.jatinvashisht.paginationandcachingpractice.data.remote.repository
 
 import android.util.Log
 import com.jatinvashisht.paginationandcachingpractice.core.Resource
+import com.jatinvashisht.paginationandcachingpractice.data.local.RecipeDatabase
+import com.jatinvashisht.paginationandcachingpractice.data.local.RecipeEntity
+import com.jatinvashisht.paginationandcachingpractice.data.mapper.toRecipeDtoItem
+import com.jatinvashisht.paginationandcachingpractice.data.mapper.toRecipeEntity
 import com.jatinvashisht.paginationandcachingpractice.data.remote.RecipeApi
 import com.jatinvashisht.paginationandcachingpractice.data.remote.dto.RecipeDtoItem
 import com.jatinvashisht.paginationandcachingpractice.domain.repository.RecipeRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class RecipeRepositoryImpl @Inject constructor(private val recipeApi: RecipeApi) :
+class RecipeRepositoryImpl @Inject constructor(
+    private val recipeApi: RecipeApi,
+    private val recipeDatabase: RecipeDatabase
+) :
     RecipeRepository {
     override suspend fun getRecipes(
         recipe: String,
         page: Int,
         pageSize: Int,
-    ):
-            Resource<List<RecipeDtoItem>> {
+        fetchFromRemote: Boolean,
+    ): Resource<List<RecipeDtoItem>> {
+
+        val recipeDao = recipeDatabase.dao
+
 
         try {
-            val recipes = recipeApi.getRecipeList(recipe = recipe)
+            val shouldJustLoadFromCache = !fetchFromRemote && recipeDao.searchRecipe("mango").isNotEmpty()
+            val myRecipes: List<RecipeEntity> = if (!shouldJustLoadFromCache) {
+
+                recipeDao.clearRecipes()
+                val remoteEntities = recipeApi.getRecipeList(recipe)
+                recipeDao.insertRecipes(remoteEntities.map {
+                    it.toRecipeEntity()
+                })
+                recipeDao.searchRecipe("")
+            } else {
+                Log.d("reciperepository", "inside should just load from cache")
+                recipeDao.searchRecipe("mango")
+            }
+            val recipes = myRecipes.map {
+                it.toRecipeDtoItem()
+            }
             val startingIndex = page * pageSize
             Log.d(
                 "reciperepository",
@@ -38,7 +61,7 @@ class RecipeRepositoryImpl @Inject constructor(private val recipeApi: RecipeApi)
                         }"
                     )
                     Resource.Success<List<RecipeDtoItem>>(data = recipes.slice(startingIndex until startingIndex + pageSize))
-                }else{
+                } else {
                     Resource.Success<List<RecipeDtoItem>>(data = recipes.slice(startingIndex until recipes.size))
                 }
             } else {
@@ -47,6 +70,5 @@ class RecipeRepositoryImpl @Inject constructor(private val recipeApi: RecipeApi)
         } catch (exception: Exception) {
             return Resource.Error<List<RecipeDtoItem>>("unable to load data, please try again later")
         }
-
     }
 }
