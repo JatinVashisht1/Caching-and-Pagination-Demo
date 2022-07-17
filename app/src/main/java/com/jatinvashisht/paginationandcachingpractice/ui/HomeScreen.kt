@@ -22,12 +22,10 @@ fun HomeScreen(
             Log.d("HomeScreen", "item size is ${state.items.size} and index is $index")
             val item = state.items[index]
 
-            // below if statement is a part of side effect
+            // below statement is a part of side effect
             LaunchedEffect(key1 = index >= state.items.size - 5 && !state.endReached && !state.isLoading){
-//                if () {
                     Log.d("If tag", "entered if statement")
                     viewModel.loadNextItems()
-//                }
             }
             Column(
                 modifier = Modifier
