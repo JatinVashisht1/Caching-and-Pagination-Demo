@@ -18,6 +18,7 @@ fun HomeScreen(
 ) {
     val state = viewModel.state
     LazyColumn(modifier = Modifier.fillMaxSize()) {
+
         items(state.items.size) { index ->
             Log.d("HomeScreen", "item size is ${state.items.size} and index is $index")
             val item = state.items[index]

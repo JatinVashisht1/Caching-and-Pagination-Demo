@@ -27,7 +27,7 @@ class RecipeRepositoryImpl @Inject constructor(
 
 
         try {
-            val shouldJustLoadFromCache = !fetchFromRemote && recipeDao.searchRecipe("mango").isNotEmpty()
+            val shouldJustLoadFromCache = !fetchFromRemote && recipeDao.searchRecipe("").isNotEmpty()
             val myRecipes: List<RecipeEntity> = if (!shouldJustLoadFromCache) {
 
                 recipeDao.clearRecipes()
@@ -38,7 +38,7 @@ class RecipeRepositoryImpl @Inject constructor(
                 recipeDao.searchRecipe("")
             } else {
                 Log.d("reciperepository", "inside should just load from cache")
-                recipeDao.searchRecipe("mango")
+                recipeDao.searchRecipe("")
             }
             val recipes = myRecipes.map {
                 it.toRecipeDtoItem()
